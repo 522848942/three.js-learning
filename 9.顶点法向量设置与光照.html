@@ -30,15 +30,52 @@
         /**
          * 创建模型
          */
-        // var geometry = new THREE.SphereGeometry(60, 40, 40); //创建一个球体几何对象
-        var geometry = new THREE.BoxGeometry(100, 100, 100); //创建一个立方体几何对象Geometry
-        var material = new THREE.MeshPhongMaterial({
+        var geometry = new THREE.BufferGeometry(); //创建一个Buffer类型几何体对象,自定义几何体
+        //类型数组创建顶点数据,三个点确定一个面网格是根据三角形来定义每个面的
+        var normals = new Float32Array([
+            0, 0, 1, //顶点1法向量
+            0, 0, 1, //顶点2法向量
+            0, 0, 1, //顶点3法向量
+
+            0, 1, 0, //顶点4法向量
+            0, 1, 0, //顶点5法向量
+            0, 1, 0, //顶点6法向量
+        ]);
+        var vertices = new Float32Array([
+            0, 0, 0, //顶点1坐标
+            50, 0, 0, //顶点2坐标
+            0, 100, 0, //顶点3坐标
+
+            0, 0, 0, //顶点4坐标
+            0, 0, 100, //顶点5坐标
+            50, 0, 0, //顶点6坐标
+
+        ]);
+        geometry.attributes.normal = new THREE.BufferAttribute(normals, 3); //3个为一组,表示一个顶点的法向量数据
+        geometry.attributes.position = new THREE.BufferAttribute(vertices, 3); //3个为一组，表示一个顶点的xyz坐标
+
+        var material = new THREE.MeshLambertMaterial({
             color: 0x0000ff,
-            specular: 0x4488ee,
-            shininess: 12
-        }); //材质对象Material
+            side: THREE.DoubleSide //两面可见
+        }); //网格材质对象Material
+
+        var materialPoints = new THREE.PointsMaterial({
+            color: 0x0000ff,
+            size: 10.0//点对象像素尺寸
+        }); //点材质对象Material
+
+        var materialLine = new THREE.LineBasicMaterial({
+            color: 0x0000ff,
+        }); //线材质对象Material
+
         var mesh = new THREE.Mesh(geometry, material); //网格模型对象Mesh
+        //var mesh = new THREE.Points(geometry, materialPoints);//点模型对象Mesh
+        //var mesh = new THREE.Line(geometry, materialLine);//线模型对象Mesh
         scene.add(mesh); //网格模型添加到场景中
+
+        var axisHelper = new THREE.AxisHelper(250);
+        scene.add(axisHelper);
+
 
 
         /**
@@ -46,13 +83,11 @@
          */
         //点光源
         var point = new THREE.PointLight(0xffffff);
-        point.position.set(400, 200, 300); //点光源位置
+        point.position.set(0, 200, 300); //点光源位置
         scene.add(point); //点光源添加到场景中
         //环境光
         var ambient = new THREE.AmbientLight(0x444444);
         scene.add(ambient);
-        // console.log(scene)
-        // console.log(scene.children)
 
 
         /**
@@ -76,16 +111,12 @@
         renderer.setClearColor(0xb9d3ff, 1); //设置背景颜色
         document.body.appendChild(renderer.domElement); //body元素中插入canvas对象
 
-
-        //执行渲染操作   指定场景、相机作为参数
         function render() {
-            renderer.render(scene, camera);//执行渲染操作
-            requestAnimationFrame(render);//请求再次执行渲染函数render
+            renderer.render(scene, camera);
+            requestAnimationFrame(render)
         }
-        render();
-        var controls = new THREE.OrbitControls(camera, renderer.domElement);//创建控件对象
-// 已经通过requestAnimationFrame(render);周期性执行render函数，没必要再通过监听鼠标事件执行render函数
-// controls.addEventListener('change', render)
+        render()
+        var controls = new THREE.OrbitControls(camera, renderer.domElement)
     </script>
 </body>
 
