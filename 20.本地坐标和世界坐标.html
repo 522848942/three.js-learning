@@ -30,14 +30,21 @@
         /**
          * 创建模型
          */
-        // var geometry = new THREE.SphereGeometry(60, 40, 40); //创建一个球体几何对象
         var geometry = new THREE.BoxGeometry(100, 100, 100); //创建一个立方体几何对象Geometry
         var material = new THREE.MeshLambertMaterial({
             color: 0x0000ff
         }); //材质对象Material
         var mesh = new THREE.Mesh(geometry, material); //网格模型对象Mesh
+        var axisHelper = new THREE.AxisHelper(250);
+        scene.add(axisHelper)
         scene.add(mesh); //网格模型添加到场景中
 
+        /* 操作 */
+        mesh.position.set(50, 0, 0)
+        var group = new THREE.Group();
+        group.position.set(50, 0, 0)
+        group.add(mesh)
+        scene.add(group);
 
         /**
          * 光源设置
@@ -82,7 +89,7 @@
         }
         render();
         var controls = new THREE.OrbitControls(camera, renderer.domElement);//创建控件对象
-        
+
 // 已经通过requestAnimationFrame(render);周期性执行render函数，没必要再通过监听鼠标事件执行render函数
 // controls.addEventListener('change', render)
     </script>

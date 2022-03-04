@@ -14,13 +14,12 @@
         }
     </style>
     <script src="./lib/three.js"></script>
-    <script src="./lib/OrbitControls.js"></script>
 </head>
 
 <body>
     <script>
 
-
+        //Three.js r125 removed support for Geometry!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         /**
          * 创建场景对象Scene
          */
@@ -30,8 +29,32 @@
         /**
          * 创建模型
          */
-        // var geometry = new THREE.SphereGeometry(60, 40, 40); //创建一个球体几何对象
-        var geometry = new THREE.BoxGeometry(100, 100, 100); //创建一个立方体几何对象Geometry
+        var geometry = new THREE.Geometry(); //声明一个几何体对象Geometry
+
+        var p1 = new THREE.Vector3(0, 0, 0); //顶点1坐标
+        var p2 = new THREE.Vector3(0, 100, 0); //顶点2坐标
+        var p3 = new THREE.Vector3(50, 0, 0); //顶点3坐标
+        var p4 = new THREE.Vector3(0, 0, 100); //顶点4坐标
+        //顶点坐标添加到geometry对象
+        geometry.vertices.push(p1, p2, p3, p4);
+
+        // Face3构造函数创建一个三角面
+        var face1 = new THREE.Face3(0, 1, 2);
+        //三角面每个顶点的法向量
+        var n1 = new THREE.Vector3(0, 0, -1); //三角面Face1顶点1的法向量
+        var n2 = new THREE.Vector3(0, 0, -1); //三角面2Face2顶点2的法向量
+        var n3 = new THREE.Vector3(0, 0, -1); //三角面3Face3顶点3的法向量
+        // 设置三角面Face3三个顶点的法向量
+        face1.vertexNormals.push(n1, n2, n3);
+
+        // 三角面2
+        var face2 = new THREE.Face3(0, 2, 3);
+        // 设置三角面法向量
+        face2.normal = new THREE.Vector3(0, -1, 0);
+
+        //三角面face1、face2添加到几何体中
+        geometry.faces.push(face1, face2);
+
         var material = new THREE.MeshLambertMaterial({
             color: 0x0000ff
         }); //材质对象Material
@@ -73,18 +96,8 @@
         renderer.setSize(width, height);//设置渲染区域尺寸
         renderer.setClearColor(0xb9d3ff, 1); //设置背景颜色
         document.body.appendChild(renderer.domElement); //body元素中插入canvas对象
-
-
         //执行渲染操作   指定场景、相机作为参数
-        function render() {
-            renderer.render(scene, camera);//执行渲染操作
-            requestAnimationFrame(render);//请求再次执行渲染函数render
-        }
-        render();
-        var controls = new THREE.OrbitControls(camera, renderer.domElement);//创建控件对象
-        
-// 已经通过requestAnimationFrame(render);周期性执行render函数，没必要再通过监听鼠标事件执行render函数
-// controls.addEventListener('change', render)
+        renderer.render(scene, camera);
     </script>
 </body>
 
